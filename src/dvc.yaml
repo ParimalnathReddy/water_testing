@@ -1,0 +1,39 @@
+stages:
+  data_collection:
+    wdir: src
+    cmd: python src/data_collection.py
+    deps:
+    - src/datacollection.py
+    outs:
+    - data/raw
+
+  pre_processing:
+    wdir: .
+    cmd: python src/data_prep.py
+    deps:
+      - src/data_prep.py
+      - data/raw/train_data.csv
+      - data/raw/test_data.csv
+    outs:
+      - data/processed
+
+  model_building:
+    wdir: .
+    cmd: python src/model_building.py
+    deps:
+      - src/model_building.py
+      - data/processed/train_data.csv
+      - data/processed/test_data.csv
+    outs:
+      - models/trained_model.pkl
+
+  model_evaluation:
+    wdir: .
+    cmd: python src/model_evaluation.py
+    deps:
+      - src/model_evaluation.py
+      - models/trained_model.pkl
+      - data/processed/test_data.csv
+    outs:
+      - reports/evaluation_report.txt
+
